@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>nageshnnazare/cpp_17 &mdash; Documentation</title>
+<title>nageshnnazare/cpp17_complete_guide &mdash; Documentation</title>
 <!-- Favicon: the brand "book" glyph (same as the sidebar toggle) on an accent tile -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%236cb1f0'/%3E%3Cg%20transform='translate(8%208)'%20fill='%23ffffff'%3E%3Cpath%20d='M0%201.75A.75.75%200%200%201%20.75%201h4.253c1.227%200%202.317.59%203%201.501A3.743%203.743%200%200%201%2011.006%201h4.245a.75.75%200%200%201%20.75.75v10.5a.75.75%200%200%201-.75.75h-4.507a2.25%202.25%200%200%200-1.591.659l-.622.621a.75.75%200%200%201-1.06%200l-.622-.621A2.25%202.25%200%200%200%205.258%2013H.75a.75.75%200%200%201-.75-.75Zm7.251%2010.324.004-5.073-.002-2.253A2.25%202.25%200%200%200%205.003%202.5H1.5v9h3.757a3.75%203.75%200%200%201%201.994.574ZM8.755%204.75l-.004%207.322a3.752%203.752%200%200%201%201.992-.572H14.5v-9h-3.495a2.25%202.25%200%200%200-2.25%202.25Z'/%3E%3C/g%3E%3C/svg%3E">
 <!-- Typography -->
@@ -19,6 +19,7 @@
 :root {
     --header-height: 56px;
     --sidebar-width: 280px;
+    /* Let the document fill the available width (no wasted screen real-estate). */
     --content-max: none;
 
     --font-sans: "Inter", -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -39,15 +40,21 @@
     --glass-tint: rgba(20,22,30,0.30);
     --glass-border: rgba(255,255,255,0.10);
     --glass-highlight: rgba(255,255,255,0.14);
-    --glass-sheen: rgba(255,255,255,0.07);
     --glass-shadow: 0 10px 30px rgba(0,0,0,0.45);
     --glass-blur: 22px;
-    /* Floating glass controls (dark) */
-    --ctrl-bg: rgba(255,255,255,0.07);
-    --ctrl-bg-hover: rgba(255,255,255,0.16);
-    --ctrl-border: rgba(255,255,255,0.16);
-    --ctrl-shadow: 0 2px 8px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.14);
-    --ctrl-shadow-hover: 0 6px 16px rgba(0,0,0,0.50), inset 0 1px 0 rgba(255,255,255,0.22);
+    /* Shared liquid-glass backdrop filter: moderate blur + saturation so the
+       page behind shows through (transparent), Apple-style, without a milky fill. */
+    --glass-filter: blur(18px) saturate(200%);
+    /* Floating glass controls (dark) -- transparent, the blur does the work. */
+    --ctrl-bg: rgba(255,255,255,0.04);
+    --ctrl-bg-hover: rgba(255,255,255,0.09);
+    --ctrl-border: rgba(255,255,255,0.12);
+    --ctrl-shadow: 0 4px 18px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.18);
+    --ctrl-shadow-hover: 0 8px 26px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.26);
+    /* Light-catching rim gradient: a single highlight on the top-left diagonal
+       edge that fades to nothing before reaching the opposite side -- the
+       asymmetric, Apple-style refractive glass edge. */
+    --glass-rim: linear-gradient(135deg, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0.08) 16%, rgba(255,255,255,0) 42%);
     --bg-sidebar: #0e1016;
     --bg-content: #0b0d12;
     --bg-code-block: #14161f;
@@ -96,6 +103,15 @@
     --nav-doc-active-bg: var(--accent);
     --nav-doc-active-fg: #0a0f17;
     --scrollbar-thumb: #2a2e40;
+
+    /* Diagram (```diagram) box accent palette */
+    --d-blue: #5aa2f0;
+    --d-green: #56c98a;
+    --d-orange: #e0a23c;
+    --d-red: #e8666f;
+    --d-purple: #b58cf0;
+    --d-teal: #45c4c4;
+    --d-gray: #9aa0b4;
 }
 
 [data-theme="light"] {
@@ -110,15 +126,18 @@
     --glass-tint: rgba(255,255,255,0.35);
     --glass-border: rgba(255,255,255,0.65);
     --glass-highlight: rgba(255,255,255,0.85);
-    --glass-sheen: rgba(255,255,255,0.55);
     --glass-shadow: 0 10px 30px rgba(16,24,40,0.12);
     --glass-blur: 22px;
-    /* Floating glass controls (light) */
-    --ctrl-bg: rgba(255,255,255,0.6);
-    --ctrl-bg-hover: rgba(255,255,255,0.92);
-    --ctrl-border: rgba(16,24,40,0.10);
-    --ctrl-shadow: 0 2px 8px rgba(16,24,40,0.12), inset 0 1px 0 rgba(255,255,255,0.85);
-    --ctrl-shadow-hover: 0 6px 16px rgba(16,24,40,0.18), inset 0 1px 0 rgba(255,255,255,0.95);
+    --glass-filter: blur(18px) saturate(190%);
+    /* Floating glass controls (light) -- transparent, the blur does the work. */
+    --ctrl-bg: rgba(255,255,255,0.35);
+    --ctrl-bg-hover: rgba(255,255,255,0.55);
+    --ctrl-border: rgba(255,255,255,0.6);
+    --ctrl-shadow: 0 4px 18px rgba(16,24,40,0.10), inset 0 1px 0 rgba(255,255,255,0.8);
+    --ctrl-shadow-hover: 0 8px 26px rgba(16,24,40,0.16), inset 0 1px 0 rgba(255,255,255,0.95);
+    /* Light-catching rim gradient: brightest at the top-left/bottom-right
+       corners, dimmer along the edges -- a refractive glass edge. */
+    --glass-rim: linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.3) 16%, rgba(255,255,255,0) 42%);
     --bg-sidebar: #ffffff;
     --bg-content: #ffffff;
     --bg-code-block: #f4f5fa;
@@ -167,6 +186,15 @@
     --nav-doc-active-bg: var(--accent);
     --nav-doc-active-fg: #ffffff;
     --scrollbar-thumb: #d0d4e2;
+
+    /* Diagram (```diagram) box accent palette (darker for light bg contrast) */
+    --d-blue: #1f6fc4;
+    --d-green: #2f8f52;
+    --d-orange: #c1771f;
+    --d-red: #d23f4a;
+    --d-purple: #7d4fd0;
+    --d-teal: #1f8a8a;
+    --d-gray: #6a7187;
 }
 
 /* === Reset & base === */
@@ -178,7 +206,14 @@ html {
     /* Honour the device safe-area (notch / home indicator) on iOS. */
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    /* Hide the browser's main page scrollbar (right + bottom) while keeping
+       the page fully scrollable. Per-component scrollbars (sidebars, code
+       blocks, tables) keep their own styled thin scrollbars. */
+    scrollbar-width: none;        /* Firefox */
+    -ms-overflow-style: none;     /* legacy Edge/IE */
 }
+html::-webkit-scrollbar,
+body::-webkit-scrollbar { width: 0; height: 0; display: none; }  /* WebKit/Blink */
 [data-theme="light"] { color-scheme: light; }
 
 body {
@@ -245,29 +280,51 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-weight: 700;
-    font-size: 14px;
+    /* Keep this perfectly in sync with .doc-select so the title looks identical
+       whether it is shown in the picker or floating in the condensed navbar. */
+    font-weight: 600;
+    font-size: 13px;
     letter-spacing: -0.01em;
     color: var(--text-primary);
     background: var(--ctrl-bg);
     border: 1px solid var(--ctrl-border);
     box-shadow: var(--ctrl-shadow);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: var(--glass-filter);
+    backdrop-filter: var(--glass-filter);
     padding: 7px 18px;
     border-radius: 999px;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.28s ease, transform 0.28s ease;
+    transition: opacity 0.4s cubic-bezier(0.32,0.72,0,1), transform 0.4s cubic-bezier(0.32,0.72,0,1);
 }
 
 /* Smoothly fade/lift the menu items in and out as the bar condenses. */
 .brand-name, .doc-selector, .search-widget {
-    transition: opacity 0.25s ease, transform 0.25s ease;
+    transition: opacity 0.4s cubic-bezier(0.32,0.72,0,1), transform 0.4s cubic-bezier(0.32,0.72,0,1);
 }
 
-/* Condensed: keep the toggle icon, drop the collection name + menu items,
-   and reveal the centered document title. */
+/* Apple-style entrance for the navbar controls when the page first loads:
+   a soft fade with a gentle scale-up (no sliding). `backwards` keeps them
+   hidden during their delay but reverts to normal afterwards so the condense
+   transitions above keep working. */
+@keyframes nav-pop-in {
+    from { opacity: 0; transform: scale(0.94); }
+    to   { opacity: 1; transform: none; }
+}
+.brand, .doc-selector, .search-widget {
+    animation: nav-pop-in 0.6s cubic-bezier(0.32, 0.72, 0, 1) backwards;
+}
+.brand         { animation-delay: 0.04s; }
+.doc-selector  { animation-delay: 0.10s; }
+.search-widget { animation-delay: 0.16s; }
+
+@media (prefers-reduced-motion: reduce) {
+    .brand, .doc-selector, .search-widget { animation: none; }
+}
+
+/* Condensed: keep the sidebar toggle icon, drop the back button, collection
+   name + menu items, and reveal the centered document title. */
+body.nav-condensed .nav-back,
 body.nav-condensed .brand-name,
 body.nav-condensed .doc-selector,
 body.nav-condensed .search-widget {
@@ -311,6 +368,8 @@ body.nav-condensed .nav-doc-title {
     gap: 8px;
     min-width: 0;
     flex-shrink: 1;
+    /* Push the picker to the right so it sits alongside the navbar buttons. */
+    margin-left: auto;
 }
 
 .doc-selector-label {
@@ -331,13 +390,16 @@ body.nav-condensed .nav-doc-title {
     background: var(--ctrl-bg);
     border: 1px solid var(--ctrl-border);
     box-shadow: var(--ctrl-shadow);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: var(--glass-filter);
+    backdrop-filter: var(--glass-filter);
     color: var(--text-primary);
     font-family: inherit;
     font-size: 13px;
     font-weight: 600;
-    padding: 7px 30px 7px 14px;
+    /* Match the 36px height of the navbar icon buttons exactly. */
+    box-sizing: border-box;
+    height: 36px;
+    padding: 0 30px 0 14px;
     border-radius: 999px;
     outline: none;
     cursor: pointer;
@@ -346,7 +408,9 @@ body.nav-condensed .nav-doc-title {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    transition: border-color 0.15s, background 0.2s, color 0.25s, box-shadow 0.2s, transform 0.15s;
+    /* Transition only background-color (not the `background` shorthand) so the
+       chevron icon never fades/slides on hover. Apple-style easing. */
+    transition: border-color 0.3s ease, background-color 0.3s cubic-bezier(0.32,0.72,0,1), color 0.25s ease, box-shadow 0.3s cubic-bezier(0.32,0.72,0,1), transform 0.3s cubic-bezier(0.32,0.72,0,1);
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
@@ -354,66 +418,168 @@ body.nav-condensed .nav-doc-title {
 }
 
 .doc-select:hover {
-    background: var(--ctrl-bg-hover);
+    background-color: var(--ctrl-bg-hover);
     box-shadow: var(--ctrl-shadow-hover);
-    transform: translateY(-1px);
+    transform: scale(1.02);
 }
+.doc-select:active { transform: scale(0.98); }
 .doc-select:focus { border-color: var(--accent); }
 
 /* === Floating circular icon buttons (Apple-style) ===
    The title/sidebar toggle, theme toggle and search button share one identical
    look so every navbar icon matches. */
 .brand-toggle,
+.nav-back,
 .theme-toggle,
 .search-toggle,
-.toc-toggle {
+.toc-toggle,
+.doc-nav {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
+    /* A 36px-tall pill: with no label it stays square (=> circle via the big
+       radius); on hover it grows to fit the text label. */
+    min-width: 36px;
     height: 36px;
     padding: 0;
-    border-radius: 50%;
+    border-radius: 999px;
     background: var(--ctrl-bg);
     border: 1px solid var(--ctrl-border);
     box-shadow: var(--ctrl-shadow);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: var(--glass-filter);
+    backdrop-filter: var(--glass-filter);
     color: var(--text-secondary);
     cursor: pointer;
     font-size: 16px;
     flex-shrink: 0;
-    transition: background 0.2s, color 0.15s, border-color 0.25s, box-shadow 0.2s, transform 0.15s;
+    position: relative;
+    /* Apple-style easing: gentle, no overshoot. */
+    transition: background 0.3s cubic-bezier(0.32,0.72,0,1), color 0.2s ease, border-color 0.3s ease, box-shadow 0.3s cubic-bezier(0.32,0.72,0,1), transform 0.3s cubic-bezier(0.32,0.72,0,1), opacity 0.2s ease, padding 0.34s cubic-bezier(0.32,0.72,0,1);
 }
+/* Refractive liquid-glass rim: a bright, light-catching highlight that traces
+   the edges and corners of each button. Built as a gradient "border" using the
+   mask-compositing trick so only the 1px ring is painted. */
+.brand-toggle::after,
+.nav-back::after,
+.theme-toggle::after,
+.search-toggle::after,
+.toc-toggle::after,
+.doc-nav::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: var(--glass-rim);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.7;
+    transition: opacity 0.3s cubic-bezier(0.32,0.72,0,1);
+}
+.brand-toggle:hover::after,
+.nav-back:hover::after,
+.theme-toggle:hover::after,
+.search-toggle:hover::after,
+.toc-toggle:hover::after,
+.doc-nav:hover::after { opacity: 0.95; }
 .brand-toggle:hover,
+.nav-back:hover,
 .theme-toggle:hover,
 .search-toggle:hover,
-.toc-toggle:hover {
+.toc-toggle:hover,
+.doc-nav:hover {
     background: var(--ctrl-bg-hover);
     color: var(--accent);
     box-shadow: var(--ctrl-shadow-hover);
-    transform: translateY(-1px);
+}
+/* Hover-to-expand pill: only buttons that actually contain a .btn-label child
+   widen on hover. Removing the <span class="btn-label"> from a button's markup
+   disables its expansion while keeping all of this styling intact. */
+.brand-toggle:has(.btn-label):hover,
+.nav-back:has(.btn-label):hover,
+.theme-toggle:has(.btn-label):hover,
+.search-toggle:has(.btn-label):hover,
+.toc-toggle:has(.btn-label):hover,
+.doc-nav:has(.btn-label):hover {
+    padding: 0 14px;
 }
 .brand-toggle:active,
+.nav-back:active,
 .theme-toggle:active,
 .search-toggle:active,
-.toc-toggle:active { transform: translateY(0) scale(0.94); }
+.toc-toggle:active,
+.doc-nav:active { transform: scale(0.94); }
 .brand-toggle .icon,
+.nav-back .icon,
 .theme-toggle .icon,
 .search-toggle .icon,
-.toc-toggle .icon { width: 17px; height: 17px; }
+.toc-toggle .icon,
+.doc-nav .icon { width: 17px; height: 17px; }
 
-/* The brand/sidebar toggle icon carries the brand accent color. */
+/* === Hover-to-expand button labels === */
+.btn-label {
+    display: inline-block;
+    max-width: 0;
+    opacity: 0;
+    margin-left: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1;
+    transition: max-width 0.36s cubic-bezier(0.32,0.72,0,1),
+                opacity 0.28s ease,
+                margin-left 0.36s cubic-bezier(0.32,0.72,0,1);
+}
+.brand-toggle:hover .btn-label,
+.nav-back:hover .btn-label,
+.theme-toggle:hover .btn-label,
+.search-toggle:hover .btn-label,
+.toc-toggle:hover .btn-label,
+.doc-nav:hover .btn-label {
+    max-width: 120px;
+    opacity: 1;
+    margin-left: 8px;
+}
+@media (prefers-reduced-motion: reduce) {
+    .btn-label { transition: none; }
+}
+
+/* Navbar button groups: prev/next live in their own wrapper, the search/theme/
+   TOC tools in another, so the two clusters are visually distinct. */
+.nav-btn-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* History-back and the prev/next buttons dim + disable when there is nowhere
+   to go (start/end of the collection, or no navigation history yet). */
+.nav-back:disabled,
+.doc-nav:disabled {
+    opacity: 0.32;
+    cursor: default;
+    pointer-events: none;
+    box-shadow: var(--ctrl-shadow);
+    transform: none;
+}
+
+/* The brand/sidebar toggle icon carries the brand accent color. It stays a
+   fixed circular branding mark and does NOT expand into a labelled pill. */
 .brand-toggle { color: var(--accent); }
-.brand-toggle:hover { color: var(--text-link-hover); }
+.brand-toggle:hover { color: var(--text-link-hover); padding: 0; }
 
 /* === Search widget === */
 .search-widget {
-    margin-left: auto;
     padding: 0;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 14px;          /* larger gap separates the two button groups */
     flex-shrink: 0;
 }
 
@@ -424,6 +590,8 @@ body.nav-condensed .nav-doc-title {
     background: var(--ctrl-bg);
     border: 1px solid var(--ctrl-border);
     box-shadow: var(--ctrl-shadow);
+    -webkit-backdrop-filter: var(--glass-filter);
+    backdrop-filter: var(--glass-filter);
     border-radius: 999px;
     padding: 3px 9px;
     line-height: 1.4;
@@ -666,6 +834,33 @@ body.nav-condensed .nav-doc-title {
     margin: 0;
 }
 
+/* Apple-style fade-in for the navigation entries each time a sidebar opens. */
+@keyframes nav-item-in {
+    from { opacity: 0; transform: scale(0.98); }
+    to   { opacity: 1; transform: none; }
+}
+/* Both sidebars share the exact same entrance. The left "Documents" tree nests
+   its file entries inside .nav-dir-children (not .nav-list), so it must be
+   covered too -- otherwise nested items wouldn't animate and the two sidebars
+   would look mismatched. */
+.sidebar-nav:not(.collapsed) .nav-list > li,
+.sidebar-nav:not(.collapsed) .nav-dir-children > li,
+.toc-sidebar:not(.collapsed) .nav-list > li {
+    animation: nav-item-in 0.4s cubic-bezier(0.32, 0.72, 0, 1) backwards;
+}
+.nav-list > li:nth-child(1), .nav-dir-children > li:nth-child(1) { animation-delay: 0.02s; }
+.nav-list > li:nth-child(2), .nav-dir-children > li:nth-child(2) { animation-delay: 0.05s; }
+.nav-list > li:nth-child(3), .nav-dir-children > li:nth-child(3) { animation-delay: 0.08s; }
+.nav-list > li:nth-child(4), .nav-dir-children > li:nth-child(4) { animation-delay: 0.11s; }
+.nav-list > li:nth-child(5), .nav-dir-children > li:nth-child(5) { animation-delay: 0.14s; }
+.nav-list > li:nth-child(6), .nav-dir-children > li:nth-child(6) { animation-delay: 0.17s; }
+.nav-list > li:nth-child(n+7), .nav-dir-children > li:nth-child(n+7) { animation-delay: 0.2s; }
+@media (prefers-reduced-motion: reduce) {
+    .sidebar-nav:not(.collapsed) .nav-list > li,
+    .sidebar-nav:not(.collapsed) .nav-dir-children > li,
+    .toc-sidebar:not(.collapsed) .nav-list > li { animation: none; }
+}
+
 .nav-list a {
     display: block;
     padding: 3px 10px;
@@ -733,12 +928,242 @@ body.nav-condensed .nav-doc-title {
     box-shadow: var(--shadow-sm);
     transition: background 0.25s, border-color 0.25s;
 }
-.tab-content.active { display: block; animation: fade-in 0.28s ease; }
+.tab-content.active { display: block; animation: fade-in 0.45s cubic-bezier(0.32, 0.72, 0, 1); }
 
 @keyframes fade-in {
-    from { opacity: 0; transform: translateY(6px); }
+    from { opacity: 0; transform: scale(0.99); }
     to   { opacity: 1; transform: none; }
 }
+
+/* === Reading progress bar (top of viewport) === */
+.read-progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    width: 0;
+    background: linear-gradient(90deg, var(--accent), var(--text-link-hover));
+    z-index: 120;
+    pointer-events: none;
+    /* width is set imperatively; keep the easing tiny so it tracks the scroll. */
+    transition: width 0.08s linear;
+}
+
+/* === Skip-to-content (keyboard / screen-reader) === */
+.skip-link {
+    position: fixed;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-150%);
+    z-index: 300;
+    background: var(--accent);
+    color: var(--nav-doc-active-fg);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+.skip-link:focus { transform: translateX(-50%) translateY(0); }
+
+/* === Doc meta line (breadcrumb + reading time) === */
+.doc-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin-bottom: 22px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+.doc-breadcrumb { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+.doc-breadcrumb .crumb-sep { opacity: 0.5; }
+.doc-reading-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: auto;
+    white-space: nowrap;
+}
+.doc-reading-time .icon { width: 13px; height: 13px; }
+
+/* === Back-to-top floating button === */
+.to-top {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--ctrl-bg);
+    border: 1px solid var(--ctrl-border);
+    box-shadow: var(--ctrl-shadow);
+    -webkit-backdrop-filter: var(--glass-filter);
+    backdrop-filter: var(--glass-filter);
+    color: var(--text-secondary);
+    cursor: pointer;
+    z-index: 110;
+    opacity: 0;
+    transform: translateY(12px) scale(0.9);
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.32,0.72,0,1), transform 0.3s cubic-bezier(0.32,0.72,0,1), color 0.2s, background 0.2s;
+}
+.to-top.show { opacity: 1; transform: none; pointer-events: auto; }
+.to-top:hover { color: var(--accent); background: var(--ctrl-bg-hover); }
+.to-top:active { transform: scale(0.92); }
+.to-top .icon { width: 18px; height: 18px; }
+
+/* === Heading permalink anchors === */
+.tab-content .heading-anchor {
+    position: relative;
+    opacity: 0;
+    margin-left: 8px;
+    font-size: 0.8em;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: none;
+    cursor: pointer;
+    transition: opacity 0.15s, color 0.15s;
+}
+.tab-content h1:hover .heading-anchor,
+.tab-content h2:hover .heading-anchor,
+.tab-content h3:hover .heading-anchor,
+.tab-content h4:hover .heading-anchor { opacity: 0.7; }
+.tab-content .heading-anchor:hover { opacity: 1; color: var(--accent); background: none; }
+
+/* "Link copied" confirmation bubble shown after clicking a permalink. */
+.tab-content .heading-anchor.copied { opacity: 1; color: var(--text-heading-h4); }
+.tab-content .heading-anchor.copied::after {
+    content: "Link copied";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 6px);
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: var(--nav-doc-active-fg);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0;
+    padding: 3px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    box-shadow: var(--shadow-md);
+    animation: anchor-tip 1.4s ease forwards;
+}
+@keyframes anchor-tip {
+    0%      { opacity: 0; transform: translateX(-50%) translateY(4px); }
+    12%, 78% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100%    { opacity: 0; transform: translateX(-50%) translateY(-3px); }
+}
+
+/* === Callouts / admonitions (built at conversion time) === */
+.callout {
+    margin: 18px 0;
+    padding: 12px 16px 12px 14px;
+    border: 1px solid var(--border-main);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    background: var(--bg-blockquote);
+}
+.callout-title {
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.01em;
+    margin-bottom: 4px;
+    color: var(--accent);
+}
+.callout-body > :first-child { margin-top: 0; }
+.callout-body > :last-child { margin-bottom: 0; }
+.callout-note      { border-left-color: var(--text-link);     }
+.callout-note .callout-title    { color: var(--text-link);     }
+.callout-tip       { border-left-color: var(--text-heading-h4); }
+.callout-tip .callout-title     { color: var(--text-heading-h4); }
+.callout-important { border-left-color: var(--text-heading-h3); }
+.callout-important .callout-title { color: var(--text-heading-h3); }
+.callout-warning   { border-left-color: var(--text-heading-h2); }
+.callout-warning .callout-title { color: var(--text-heading-h2); }
+.callout-caution   { border-left-color: #e0555f; }
+.callout-caution .callout-title { color: #e0555f; }
+
+/* === Diagrams (```diagram blocks, rendered to nested boxes at build time) === */
+.diagram {
+    margin: 22px 0;
+    padding: 24px 24px 28px;
+    border: 1px solid var(--border-main);
+    border-radius: var(--radius-lg, 16px);
+    background: linear-gradient(180deg, rgba(127,127,127,0.04), transparent);
+}
+.diagram-title {
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+}
+/* A titled box. Title sits on the top border like a fieldset legend. */
+.dbox {
+    position: relative;
+    border: 1.5px solid var(--dbox-color, var(--border-main));
+    border-radius: 13px;
+    padding: 20px 20px 18px;
+    margin-top: 22px;
+    background: var(--dbox-fill, rgba(127,127,127,0.03));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), var(--shadow-md);
+}
+.dbox:first-child { margin-top: 4px; }
+.dbox > .dbox-title {
+    position: absolute;
+    top: -9px;
+    left: 18px;
+    padding: 1px 10px;
+    border-radius: 7px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--dbox-color, var(--text-primary));
+    background: var(--bg-content);
+}
+.dbox.dashed { border-style: dashed; }
+.dtext {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.55;
+    margin: 8px 0;
+}
+.dtext:first-of-type { margin-top: 4px; }
+.dtext:last-child { margin-bottom: 0; }
+.dtext b { color: var(--text-primary); font-weight: 700; }
+.dtext code, .dbox-title code {
+    font-family: var(--font-mono);
+    font-size: 0.92em;
+    background: var(--bg-code-inline);
+    padding: 1px 5px;
+    border-radius: 5px;
+}
+/* color variants drive both border + legend via a single custom property */
+.dbox.blue   { --dbox-color: var(--d-blue);   --dbox-fill: color-mix(in srgb, var(--d-blue) 7%, transparent); }
+.dbox.green  { --dbox-color: var(--d-green);  --dbox-fill: color-mix(in srgb, var(--d-green) 7%, transparent); }
+.dbox.orange { --dbox-color: var(--d-orange); --dbox-fill: color-mix(in srgb, var(--d-orange) 7%, transparent); }
+.dbox.red    { --dbox-color: var(--d-red);    --dbox-fill: color-mix(in srgb, var(--d-red) 7%, transparent); }
+.dbox.purple { --dbox-color: var(--d-purple); --dbox-fill: color-mix(in srgb, var(--d-purple) 7%, transparent); }
+.dbox.teal   { --dbox-color: var(--d-teal);   --dbox-fill: color-mix(in srgb, var(--d-teal) 7%, transparent); }
+.dbox.gray   { --dbox-color: var(--d-gray);   --dbox-fill: color-mix(in srgb, var(--d-gray) 7%, transparent); }
+
+/* === Visible keyboard focus rings === */
+/* Keyboard focus ring. Do NOT set border-radius here -- modern browsers round
+   the outline to the element's own radius, and forcing a radius would square
+   off the pill-shaped document selector when focused. */
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+.doc-select:focus-visible, .nav-list a:focus-visible { outline-offset: 1px; }
 
 /* === Headings === */
 .tab-content h1, .tab-content h2, .tab-content h3,
@@ -1092,8 +1517,9 @@ body.nav-condensed .nav-doc-title {
         padding-left: max(12px, env(safe-area-inset-left));
         padding-right: max(12px, env(safe-area-inset-right));
     }
-    /* Let the document picker take whatever width is left. */
-    .doc-selector { flex: 1 1 auto; }
+    /* Let the document picker take whatever width is left (an auto left margin
+       would otherwise swallow the free space and block flex-grow). */
+    .doc-selector { flex: 1 1 auto; margin-left: 0; }
     .doc-select { min-width: 0; max-width: none; width: 100%; }
 
     .content-area {
@@ -1121,10 +1547,14 @@ body.nav-condensed .nav-doc-title {
     :root { --header-height: 52px; }
     body { font-size: 15px; }
     .doc-selector-label { display: none; }
+    /* Header is tight on phones: drop the prev/next pair (the picker still
+       switches documents). */
+    .nav-btn-group-docnav { display: none; }
     .header-inner { gap: 6px; }
     .search-widget { gap: 6px; }
     /* Comfortable tap targets. */
     .brand-toggle, .theme-toggle, .search-toggle, .toc-toggle { width: 38px; height: 38px; }
+    .doc-select { height: 38px; }
     .content-area { padding-top: calc(var(--header-height) + 10px); padding-bottom: 48px; }
     .tab-content { padding: 18px 14px 32px; }
     .tab-content h1 { font-size: 1.5em; padding-bottom: 12px; margin-bottom: 18px; }
@@ -1160,25 +1590,41 @@ body.nav-condensed .nav-doc-title {
 </head>
 <body data-theme="dark" class="sidebar-collapsed toc-collapsed">
 
+<a class="skip-link" href="#tabPanels">Skip to content</a>
+<div class="read-progress" id="readProgress"></div>
+
 <div class="header-bar">
   <div class="header-inner" id="headerInner">
     <div class="brand">
       <button class="brand-toggle" id="sidebarToggle" title="Toggle sidebar (Ctrl+B)" aria-label="Toggle sidebar">
         <svg class="icon brand-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm7.251 10.324.004-5.073-.002-2.253A2.25 2.25 0 0 0 5.003 2.5H1.5v9h3.757a3.75 3.75 0 0 1 1.994.574ZM8.755 4.75l-.004 7.322a3.752 3.752 0 0 1 1.992-.572H14.5v-9h-3.495a2.25 2.25 0 0 0-2.25 2.25Z"></path></svg>
       </button>
-      <span class="brand-name">nageshnnazare/cpp_17</span>
+      <button class="nav-back" id="navBack" title="Go back (Alt+&larr;)" aria-label="Go back" disabled>
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.78 1.97a.75.75 0 0 1 0 1.06L3.81 6h6.44A4.75 4.75 0 0 1 15 10.75v2.5a.75.75 0 0 1-1.5 0v-2.5a3.25 3.25 0 0 0-3.25-3.25H3.81l2.97 2.97a.75.75 0 1 1-1.06 1.06L1.47 7.28a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z"></path></svg>
+      </button>
+      <span class="brand-name">nageshnnazare/cpp17_complete_guide</span>
     </div>
     <div class="doc-selector">
       <select class="doc-select" id="docSelect" title="Switch document"></select>
     </div>
     <div class="search-widget">
-      <button class="search-toggle" id="searchTrigger" title="Search all documents (Ctrl+K)" aria-label="Search">
-        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"></path></svg>
-      </button>
-      <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode (Ctrl+Shift+L)" aria-label="Toggle theme"></button>
-      <button class="toc-toggle" id="tocToggle" title="Toggle table of contents (Ctrl+I)" aria-label="Toggle table of contents">
-        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm3.75-1.5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5Zm0 5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5ZM2 9a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm2.75-.5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5Z"></path></svg>
-      </button>
+      <div class="nav-btn-group nav-btn-group-docnav">
+        <button class="doc-nav" id="docPrev" title="Previous document" aria-label="Previous document">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M9.78 12.78a.75.75 0 0 1-1.06 0L4.47 8.53a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 1.06L6.06 8l3.72 3.72a.75.75 0 0 1 0 1.06Z"></path></svg>
+        </button>
+        <button class="doc-nav" id="docNext" title="Next document" aria-label="Next document">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"></path></svg>
+        </button>
+      </div>
+      <div class="nav-btn-group nav-btn-group-tools">
+        <button class="search-toggle" id="searchTrigger" title="Search all documents (Ctrl+K)" aria-label="Search">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"></path></svg>
+        </button>
+        <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode (Ctrl+Shift+L)" aria-label="Toggle theme"></button>
+        <button class="toc-toggle" id="tocToggle" title="Toggle table of contents (Ctrl+I)" aria-label="Toggle table of contents">
+          <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm3.75-1.5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5Zm0 5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5ZM2 9a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm2.75-.5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5Z"></path></svg>
+        </button>
+      </div>
     </div>
     <div class="nav-doc-title" id="navDocTitle" aria-hidden="true"></div>
   </div>
@@ -1209,6 +1655,9 @@ body.nav-condensed .nav-doc-title {
   <div class="content-area">
     <div id="tabPanels"></div>
   </div>
+  <button class="to-top" id="toTop" title="Back to top" aria-label="Back to top">
+    <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.47 7.78a.75.75 0 0 1 0-1.06l4-4a.75.75 0 0 1 1.06 0l4 4a.75.75 0 0 1-1.06 1.06L8.75 4.81V13a.75.75 0 0 1-1.5 0V4.81L4.53 7.78a.75.75 0 0 1-1.06 0Z"></path></svg>
+  </button>
   <nav class="toc-sidebar collapsed" id="tocSidebar">
     <div class="sidebar-section" id="tocSection">
       <div class="nav-title">
@@ -1222,7 +1671,7 @@ body.nav-condensed .nav-doc-title {
 
 <script>
 const TAB_DATA = [
-  { name: `1. Index`, path: `00_index.md`, dir: ``, body: `<h1 id="c17---the-complete-guide-master-index">C++17 - The Complete Guide: Master Index</h1>
+  { name: `1. Index`, path: `00_index.md`, dir: ``, words: 1766, mins: 9, body: `<h1 id="c17---the-complete-guide-master-index">C++17 - The Complete Guide: Master Index</h1>
 <p>This document is a <strong>reader and study companion</strong> for the first edition of <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis. Page references use the numbering of the printed <strong>first edition</strong> (452 pages, publication date <strong>2019-12-20</strong>). Minor shifts of plus or minus a few pages can occur between printings; treat ranges as <strong>approximate</strong> outside the explicitly cited front sections of Part I.</p>
 <hr />
 <h2 id="book-metadata">Book metadata</h2>
@@ -1632,7 +2081,7 @@ const TAB_DATA = [
 <h2 id="reference">Reference</h2>
 <p>Nicolai M. Josuttis, <em>C++17 - The Complete Guide</em>, first edition, published 2019-12-20, approximately 452 pages.</p>
 <p>Public companion material and example tables of contents (subject to change without notice): https://www.cppstd17.com/</p>` },
-  { name: `2. Structured Bindings`, path: `01_structured_bindings.md`, dir: ``, body: `<h1 id="chapter-1-structured-bindings">Chapter 1: Structured Bindings</h1>
+  { name: `2. Structured Bindings`, path: `01_structured_bindings.md`, dir: ``, words: 1998, mins: 10, body: `<h1 id="chapter-1-structured-bindings">Chapter 1: Structured Bindings</h1>
 <p><strong>Book:</strong> <em>C++17 - The Complete Guide</em>, first edition, Nicolai M. Josuttis (published 2019-12-20, 452 pages)<br />
 <strong>Chapter:</strong> 1 - Structured Bindings<br />
 <strong>Book page span:</strong> approximately <strong>pp. 3-19</strong> (section numbering below mirrors the book: <strong>1.1</strong>, <strong>1.2</strong>, and so on)</p>
@@ -1974,7 +2423,7 @@ int main() {
 <li><code>02_if_switch_init.md</code> - combining structured bindings with <code>if</code> init statements.  </li>
 </ul>
 <p>Reference: Nicolai M. Josuttis, <em>C++17 - The Complete Guide</em> (first edition, 2019-12-20).</p>` },
-  { name: `3. If Switch Init`, path: `02_if_switch_init.md`, dir: ``, body: `<h1 id="chapter-2-if-and-switch-with-initialization">Chapter 2: <code>if</code> and <code>switch</code> with Initialization</h1>
+  { name: `3. If Switch Init`, path: `02_if_switch_init.md`, dir: ``, words: 948, mins: 5, body: `<h1 id="chapter-2-if-and-switch-with-initialization">Chapter 2: <code>if</code> and <code>switch</code> with Initialization</h1>
 <p><strong>Book:</strong> <em>C++17 - The Complete Guide</em>, first edition, Nicolai M. Josuttis (published 2019-12-20, 452 pages)<br />
 <strong>Chapter:</strong> 2 - <code>if</code> and <code>switch</code> with initialization<br />
 <strong>Book page span:</strong> approximately <strong>pp. 21-24</strong> (sections <strong>2.1</strong>-<strong>2.3</strong>)</p>
@@ -2192,7 +2641,7 @@ void describe(const char* name) {
 <li><code>00_index.md</code> (full book roadmap)</li>
 </ul>
 <p>Reference: Nicolai M. Josuttis, <em>C++17 - The Complete Guide</em> (first edition, 2019-12-20).</p>` },
-  { name: `4. Inline Variables`, path: `03_inline_variables.md`, dir: ``, body: `<h1 id="chapter-3-inline-variables">Chapter 3: Inline Variables</h1>
+  { name: `4. Inline Variables`, path: `03_inline_variables.md`, dir: ``, words: 1177, mins: 6, body: `<h1 id="chapter-3-inline-variables">Chapter 3: Inline Variables</h1>
 <p><strong>Book:</strong> <em>C++17 - The Complete Guide</em>, first edition, Nicolai M. Josuttis (published 2019-12-20, 452 pages)<br />
 <strong>Chapter:</strong> 3 - Inline variables<br />
 <strong>Book page span:</strong> approximately <strong>pp. 25-31</strong> (sections <strong>3.1</strong>-<strong>3.5</strong>)</p>
@@ -2465,7 +2914,7 @@ Stack frames (conceptual)
 <li><code>02_if_switch_init.md</code> (RAII patterns complementary to globals)  </li>
 </ul>
 <p>Reference: Nicolai M. Josuttis, <em>C++17 - The Complete Guide</em> (first edition, 2019-12-20).</p>` },
-  { name: `5. Aggregate Extensions`, path: `04_aggregate_extensions.md`, dir: ``, body: `<h1 id="chapter-4-aggregate-extensions">Chapter 4: Aggregate Extensions</h1>
+  { name: `5. Aggregate Extensions`, path: `04_aggregate_extensions.md`, dir: ``, words: 1298, mins: 6, body: `<h1 id="chapter-4-aggregate-extensions">Chapter 4: Aggregate Extensions</h1>
 <p><strong>Book reference:</strong> <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis (pages 33-37)</p>
 <p>This chapter explains how C++17 extends aggregate initialization so that types derived from base classes can often be initialized with brace notation like plain C-style structs, without writing explicit constructors. It also tightens the formal definition of an <em>aggregate</em> and introduces a small <strong>backward incompatibility</strong> you should know about.</p>
 <hr />
@@ -2714,7 +3163,7 @@ static_assert(std::is_aggregate_v&lt;CppData&gt;);
 <li>Cross-reference <strong>list initialization</strong> and <strong>value initialization</strong> chapters for the full picture.</li>
 <li>When in doubt, use <code>std::is_aggregate_v</code> and read compiler errors for your exact GCC/Clang/MSVC version; diagnostics improve over time.</li>
 </ul>` },
-  { name: `6. Mandatory Copy Elision`, path: `05_mandatory_copy_elision.md`, dir: ``, body: `<h1 id="chapter-5-mandatory-copy-elision-passing-unmaterialized-objects">Chapter 5: Mandatory Copy Elision (Passing Unmaterialized Objects)</h1>
+  { name: `6. Mandatory Copy Elision`, path: `05_mandatory_copy_elision.md`, dir: ``, words: 1280, mins: 6, body: `<h1 id="chapter-5-mandatory-copy-elision-passing-unmaterialized-objects">Chapter 5: Mandatory Copy Elision (Passing Unmaterialized Objects)</h1>
 <p><strong>Book reference:</strong> <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis (pages 39-46)</p>
 <p>Copy elision (formerly called the &ldquo;named return value optimization&rdquo; when named, and RVO-related behavior for temporaries) has a long history. <strong>C++17</strong> makes <strong>copy elision mandatory</strong> in specific situations involving <strong>prvalues</strong>, which changes what programs <strong>must</strong> compile even when copy and move constructors are <strong>deleted</strong>.</p>
 <hr />
@@ -2979,7 +3428,7 @@ f(X());  // prvalue X() may be passed without extra copy/move
 <hr />
 <h2 id="afternotes-chapter-context">Afternotes (chapter context)</h2>
 <p>The standard wording shift around <strong>prvalues initializing objects</strong> and <strong>guaranteed copy elision</strong> is one of the most impactful C++17 core language changes for <strong>move-less</strong> and <strong>wrapper</strong> types. Josuttis ties this to clearer <strong>value category</strong> teaching and to real-world library design (e.g. factories, atomics, immovable handles).</p>` },
-  { name: `7. Lambda Extensions`, path: `06_lambda_extensions.md`, dir: ``, body: `<h1 id="chapter-6-lambda-extensions">Chapter 6: Lambda Extensions</h1>
+  { name: `7. Lambda Extensions`, path: `06_lambda_extensions.md`, dir: ``, words: 1026, mins: 5, body: `<h1 id="chapter-6-lambda-extensions">Chapter 6: Lambda Extensions</h1>
 <p><strong>Book reference:</strong> <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis (pages 47-53)</p>
 <p>Lambdas in C++17 gain two headline features discussed in this chapter:</p>
 <ol>
@@ -3191,7 +3640,7 @@ void example(std::string&amp; s) {
 <li>Why is <code>[this, *this]</code> ill-formed?</li>
 </ol>
 <p>(Answers follow directly from the sections above.)</p>` },
-  { name: `8. New Attributes`, path: `07_new_attributes.md`, dir: ``, body: `<h1 id="chapter-7-new-attributes-and-attribute-features">Chapter 7: New Attributes and Attribute Features</h1>
+  { name: `8. New Attributes`, path: `07_new_attributes.md`, dir: ``, words: 806, mins: 4, body: `<h1 id="chapter-7-new-attributes-and-attribute-features">Chapter 7: New Attributes and Attribute Features</h1>
 <p><strong>Book reference:</strong> <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis (pages 55-59)</p>
 <p>C++17 standardizes several attributes that compilers can use for <strong>warnings</strong>, <strong>portable annotation</strong>, and <strong>API evolution</strong>. This chapter focuses on <code>[[nodiscard]]</code>, <code>[[maybe_unused]]</code>, and <code>[[fallthrough]]</code>, plus <strong>general attribute extensions</strong> (namespaces, enumerators, attribute namespaces with <code>using</code>).</p>
 <hr />
@@ -3345,7 +3794,7 @@ void dispatch(int x) {
 └─────────────────────────────────────────────────────────────┘
 </code></pre>
 <p>(Exact parsing rules follow the C++ grammar; compilers accept common layouts.)</p>` },
-  { name: `9. Other Language Features`, path: `08_other_language_features.md`, dir: ``, body: `<h1 id="chapter-8-other-language-features">Chapter 8: Other Language Features</h1>
+  { name: `9. Other Language Features`, path: `08_other_language_features.md`, dir: ``, words: 1089, mins: 5, body: `<h1 id="chapter-8-other-language-features">Chapter 8: Other Language Features</h1>
 <p><strong>Book reference:</strong> <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis (pages 61-73)</p>
 <p>This chapter collects several smaller but important C++17 changes: <strong>nested namespace</strong> syntax, <strong>specified evaluation order</strong>, relaxed <strong>scoped enum</strong> initialization, <strong><code>auto</code> brace init</strong> fixes, <strong>hex float</strong> literals, <strong><code>u8</code> character literals</strong>, <strong>exception specifications in types</strong>, <strong><code>static_assert</code> without message</strong>, and <strong><code>__has_include</code></strong>.</p>
 <hr />
@@ -3622,7 +4071,7 @@ void require_default_constructible() {
 <li>Use <code>std::is_function_v&lt;void() noexcept&gt;</code> vs <code>void()</code> in a trait probe.</li>
 </ol>
 <p>All examples should be validated with <strong><code>-std=c++17</code></strong> or newer on your compiler.</p>` },
-  { name: `10. Class Template Arg Deduction`, path: `09_class_template_arg_deduction.md`, dir: ``, body: `<h1 id="chapter-9-class-template-argument-deduction-ctad">Chapter 9: Class Template Argument Deduction (CTAD)</h1>
+  { name: `10. Class Template Arg Deduction`, path: `09_class_template_arg_deduction.md`, dir: ``, words: 1982, mins: 10, body: `<h1 id="chapter-9-class-template-argument-deduction-ctad">Chapter 9: Class Template Argument Deduction (CTAD)</h1>
 <p><strong>Book:</strong> <em>C++17 - The Complete Guide</em>, Nicolai M. Josuttis<br />
 <strong>Chapter:</strong> 9 - Class Template Argument Deduction<br />
 <strong>Book page span:</strong> <strong>pp. 77-93</strong> (section numbers below align with the book: <strong>9.1</strong>, <strong>9.2</strong>, and so on)</p>
@@ -3995,7 +4444,7 @@ void trap(std::string s) {
 </ol>
 <hr />
 <p><strong>Primary reference:</strong> Josuttis, <em>C++17 - The Complete Guide</em>, Chapter 9, <strong>pp. 77-93</strong>.</p>` },
-  { name: `11. Compile Time If`, path: `10_compile_time_if.md`, dir: ``, body: `<h1 id="chapter-10-compile-time-if">Chapter 10: Compile-Time <code>if</code></h1>
+  { name: `11. Compile Time If`, path: `10_compile_time_if.md`, dir: ``, words: 1306, mins: 7, body: `<h1 id="chapter-10-compile-time-if">Chapter 10: Compile-Time <code>if</code></h1>
 <p><strong>Book:</strong> <em>C++17 - The Complete Guide</em>, Nicolai M. Josuttis<br />
 <strong>Chapter:</strong> 10 - Compile-Time <code>if</code><br />
 <strong>Book page span:</strong> <strong>pp. 95-105</strong> (sections <strong>10.1</strong>-<strong>10.4</strong>)</p>
@@ -4224,7 +4673,7 @@ Continue                           (still: syntax / non-dependent checks)
 </ol>
 <hr />
 <p><strong>Primary reference:</strong> Josuttis, <em>C++17 - The Complete Guide</em>, Chapter 10, <strong>pp. 95-105</strong>.</p>` },
-  { name: `12. Fold Expressions`, path: `11_fold_expressions.md`, dir: ``, body: `<h1 id="chapter-11-fold-expressions">Chapter 11: Fold Expressions</h1>
+  { name: `12. Fold Expressions`, path: `11_fold_expressions.md`, dir: ``, words: 1044, mins: 5, body: `<h1 id="chapter-11-fold-expressions">Chapter 11: Fold Expressions</h1>
 <p><strong>Book:</strong> <em>C++17 - The Complete Guide</em>, Nicolai M. Josuttis<br />
 <strong>Chapter:</strong> 11 - Fold Expressions<br />
 <strong>Book page span:</strong> <strong>pp. 107-118</strong> (sections <strong>11.1</strong>-<strong>11.2.3</strong>)</p>
@@ -4461,7 +4910,7 @@ If you mix &lt;&lt;, +, and comparisons, add parentheses EXPLICITLY.
 </ol>
 <hr />
 <p><strong>Primary reference:</strong> Josuttis, <em>C++17 - The Complete Guide</em>, Chapter 11, <strong>pp. 107-118</strong>.</p>` },
-  { name: `13. String Literals Template Params`, path: `12_string_literals_template_params.md`, dir: ``, body: `<h1 id="chapter-12-dealing-with-string-literals-as-template-parameters">Chapter 12: Dealing with String Literals as Template Parameters</h1>
+  { name: `13. String Literals Template Params`, path: `12_string_literals_template_params.md`, dir: ``, words: 601, mins: 3, body: `<h1 id="chapter-12-dealing-with-string-literals-as-template-parameters">Chapter 12: Dealing with String Literals as Template Parameters</h1>
 <p><strong>Book:</strong> <em>C++17 - The Complete Guide</em>, Nicolai M. Josuttis<br />
 <strong>Chapter:</strong> 12 - Dealing with String Literals as Template Parameters<br />
 <strong>Book page span:</strong> <strong>pp. 119-120</strong> (section <strong>12.1</strong>)</p>
@@ -4553,7 +5002,7 @@ void demoConstexprFn() {
 </ol>
 <hr />
 <p><strong>Primary reference:</strong> Josuttis, <em>C++17 - The Complete Guide</em>, Chapter 12, <strong>pp. 119-120</strong>.</p>` },
-  { name: `14. Placeholder Types Template Params`, path: `13_placeholder_types_template_params.md`, dir: ``, body: `<h1 id="chapter-13-placeholder-types-like-auto-as-template-parameters">Chapter 13: Placeholder Types like <code>auto</code> as Template Parameters</h1>
+  { name: `14. Placeholder Types Template Params`, path: `13_placeholder_types_template_params.md`, dir: ``, words: 931, mins: 5, body: `<h1 id="chapter-13-placeholder-types-like-auto-as-template-parameters">Chapter 13: Placeholder Types like <code>auto</code> as Template Parameters</h1>
 <p><strong>Book:</strong> <em>C++17 - The Complete Guide</em>, Nicolai M. Josuttis<br />
 <strong>Chapter:</strong> 13 - Placeholder Types like <code>auto</code> as Template Parameters<br />
 <strong>Book page span:</strong> <strong>pp. 121-127</strong> (sections <strong>13.1</strong>-<strong>13.3</strong>)</p>
@@ -4745,7 +5194,7 @@ void demoDecltypeAuto() {
 </ol>
 <hr />
 <p><strong>Primary reference:</strong> Josuttis, <em>C++17 - The Complete Guide</em>, Chapter 13, <strong>pp. 121-127</strong>.</p>` },
-  { name: `15. Extended Using Declarations`, path: `14_extended_using_declarations.md`, dir: ``, body: `<h1 id="chapter-14-extended-using-declarations">Chapter 14: Extended Using Declarations</h1>
+  { name: `15. Extended Using Declarations`, path: `14_extended_using_declarations.md`, dir: ``, words: 593, mins: 3, body: `<h1 id="chapter-14-extended-using-declarations">Chapter 14: Extended Using Declarations</h1>
 <p><strong>Book:</strong> <em>C++17 - The Complete Guide</em>, Nicolai M. Josuttis<br />
 <strong>Chapter:</strong> 14 - Extended Using Declarations<br />
 <strong>Book page span:</strong> <strong>pp. 129-132</strong> (sections <strong>14.1</strong>-<strong>14.2</strong>)</p>
@@ -4869,7 +5318,7 @@ class Multi : private Base&lt;Types&gt;... {
 </ol>
 <hr />
 <p><strong>Primary reference:</strong> Josuttis, <em>C++17 - The Complete Guide</em>, Chapter 14, <strong>pp. 129-132</strong>.</p>` },
-  { name: `16. Std Optional`, path: `15_std_optional.md`, dir: ``, body: `<h1 id="chapter-15-stdoptional-the-complete-guide-pp-135-147">Chapter 15: <code>std::optional&lt;&gt;</code> (The Complete Guide, pp. 135-147)</h1>
+  { name: `16. Std Optional`, path: `15_std_optional.md`, dir: ``, words: 3023, mins: 15, body: `<h1 id="chapter-15-stdoptional-the-complete-guide-pp-135-147">Chapter 15: <code>std::optional&lt;&gt;</code> (The Complete Guide, pp. 135-147)</h1>
 <p>This chapter follows <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis (O&rsquo;Reilly). Page references use <strong>p.</strong> for a single page.</p>
 <hr />
 <h2 id="151-using-stdoptional-p-135">15.1 Using <code>std::optional&lt;&gt;</code> (p. 135)</h2>
@@ -5391,7 +5840,7 @@ std::optional&lt;std::optional&lt;int&gt;&gt; oo_empty_inner{
 <li><strong>§15.3</strong> (p. 146): <code>bool</code>, pointers, nesting.</li>
 </ul>
 <p>This tutorial expands the book&rsquo;s examples with self-contained snippets; align your coding style and error-handling discipline with your project&rsquo;s rules.</p>` },
-  { name: `17. Std Variant`, path: `16_std_variant.md`, dir: ``, body: `<h1 id="chapter-16-stdvariant-the-complete-guide-pp-149-168">Chapter 16: <code>std::variant&lt;&gt;</code> (The Complete Guide, pp. 149-168)</h1>
+  { name: `17. Std Variant`, path: `16_std_variant.md`, dir: ``, words: 2534, mins: 13, body: `<h1 id="chapter-16-stdvariant-the-complete-guide-pp-149-168">Chapter 16: <code>std::variant&lt;&gt;</code> (The Complete Guide, pp. 149-168)</h1>
 <p>This chapter follows <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis. Page references use <strong>p.</strong></p>
 <hr />
 <h2 id="161-motivation-p-149-type-safe-union">16.1 Motivation (p. 149): type-safe union</h2>
@@ -5817,7 +6266,7 @@ void printCollOverloaded(const std::vector&lt;Var&gt;&amp; coll) {
 <li><strong><code>visit</code></strong>: function objects, <strong>mutating</strong> visitors, <strong>generic lambdas</strong>, <strong><code>if constexpr</code></strong>, unified <strong>return types</strong>, and <strong><code>overload{...}</code></strong> cover most dispatch patterns.</li>
 <li>Watch <strong>valueless-by-exception</strong> (e.g. throwing conversions in <strong><code>emplace</code></strong>) and the <strong><code>bool</code> / <code>const char*</code></strong> interaction (p. 168).</li>
 </ul>` },
-  { name: `18. Std Any`, path: `17_std_any.md`, dir: ``, body: `<h1 id="chapter-17-stdany-the-complete-guide-pp-171-177">Chapter 17: <code>std::any</code> (The Complete Guide, pp. 171-177)</h1>
+  { name: `18. Std Any`, path: `17_std_any.md`, dir: ``, words: 1151, mins: 6, body: `<h1 id="chapter-17-stdany-the-complete-guide-pp-171-177">Chapter 17: <code>std::any</code> (The Complete Guide, pp. 171-177)</h1>
 <p>This chapter follows <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis. Page references use <strong>p.</strong></p>
 <hr />
 <h2 id="171-using-stdany-p-171">17.1 Using <code>std::any</code> (p. 171)</h2>
@@ -6040,7 +6489,7 @@ int main() {
 <li><strong>Move semantics</strong> (pp. 176-177): move-in/move-out idioms, moved-from state, no <code>any_cast</code> rvalue reference overload.</li>
 </ul>
 <p>This file is a tutorial expansion keyed to the book&rsquo;s page ranges; consult the printed chapter for Josuttis&rsquo;s original prose and additional edge cases.</p>` },
-  { name: `19. Std Byte`, path: `18_std_byte.md`, dir: ``, body: `<h1 id="chapter-18-stdbyte-the-complete-guide-pp-179-184">Chapter 18: <code>std::byte</code> (The Complete Guide, pp. 179-184)</h1>
+  { name: `19. Std Byte`, path: `18_std_byte.md`, dir: ``, words: 1078, mins: 5, body: `<h1 id="chapter-18-stdbyte-the-complete-guide-pp-179-184">Chapter 18: <code>std::byte</code> (The Complete Guide, pp. 179-184)</h1>
 <p>This chapter follows <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis. Page references use <strong>p.</strong></p>
 <hr />
 <h2 id="181-using-stdbyte-p-179">18.1 Using <code>std::byte</code> (p. 179)</h2>
@@ -6214,7 +6663,7 @@ void set_write(std::byte* word, std::size_t len_bytes) {
 <li><strong>§18.2</strong> (p. 181): precise operations; <strong>I/O</strong> (decimal, <strong>bitset</strong> binary strings, <strong><code>to_chars</code></strong> / stream patterns from pp. 183-184).</li>
 </ul>
 <p>Use the printed index for cross-references to <code>std::vector&lt;std::byte&gt;</code>-style buffers in other parts of the book.</p>` },
-  { name: `20. String Views`, path: `19_string_views.md`, dir: ``, body: `<h1 id="chapter-19-string-views-the-complete-guide-pp-185-198">Chapter 19: String Views (The Complete Guide, pp. 185-198)</h1>
+  { name: `20. String Views`, path: `19_string_views.md`, dir: ``, words: 1426, mins: 7, body: `<h1 id="chapter-19-string-views-the-complete-guide-pp-185-198">Chapter 19: String Views (The Complete Guide, pp. 185-198)</h1>
 <p>This chapter follows <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis. Page references use <strong>p.</strong></p>
 <hr />
 <h2 id="191-differences-vs-stdstring-p-185">19.1 Differences vs <code>std::string</code> (p. 185)</h2>
@@ -6442,7 +6891,7 @@ logMessage(s);
 <li><strong>§19.4-19.5</strong> (pp. 192-198): API migration, hashing, <code>""sv</code>.</li>
 </ul>
 <p>This tutorial expands examples around the book&rsquo;s guidance; for exhaustive trait tables and standard wording, use the O&rsquo;Reilly text directly.</p>` },
-  { name: `21. Filesystem Library`, path: `20_filesystem_library.md`, dir: ``, body: `<h1 id="chapter-20-the-filesystem-library-the-complete-guide-pp-201-248">Chapter 20: The Filesystem Library (The Complete Guide, pp. 201-248)</h1>
+  { name: `21. Filesystem Library`, path: `20_filesystem_library.md`, dir: ``, words: 3202, mins: 16, body: `<h1 id="chapter-20-the-filesystem-library-the-complete-guide-pp-201-248">Chapter 20: The Filesystem Library (The Complete Guide, pp. 201-248)</h1>
 <p>This chapter follows <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis. Page references use <strong>p.</strong></p>
 <p>C++17 integrates the <strong>Filesystem library</strong> as defined in ISO C++17. The facilities live in <code>&lt;filesystem&gt;</code> under namespace <code>std::filesystem</code>.</p>
 <p><strong>Markers used in this note:</strong></p>
@@ -7345,7 +7794,7 @@ namespace fs = std::filesystem;
 <li><strong>§20.5</strong> (p. 244): iterators, <code>directory_options</code>, <code>directory_entry</code> caching.</li>
 </ul>
 <p>These notes are a chapter companion keyed to <em>C++17 - The Complete Guide</em>; printings may shift page numbers slightly.</p>` },
-  { name: `22. Type Traits Extensions`, path: `21_type_traits_extensions.md`, dir: ``, body: `<h1 id="chapter-21-extensions-of-type-traits">Chapter 21: Extensions of Type Traits</h1>
+  { name: `22. Type Traits Extensions`, path: `21_type_traits_extensions.md`, dir: ``, words: 1223, mins: 6, body: `<h1 id="chapter-21-extensions-of-type-traits">Chapter 21: Extensions of Type Traits</h1>
 <p><em>Reference: Nicolai M. Josuttis, </em><em>C++17 - The Complete Guide</em><em>, Chapter 21, pp. 251-257.</em></p>
 <p>This chapter documents C++17 extensions to <code>&lt;type_traits&gt;</code>: the <code>_v</code> variable templates for existing traits, new traits for aggregates, invocation, logical metafunctions, swappability, and the <code>bool_constant</code> alias.</p>
 <hr />
@@ -7741,7 +8190,7 @@ static_assert(!IsIntegralOrEnumAlt_v&lt;double&gt;);
 <ul>
 <li>Inline variables and variable templates: earlier language chapters tie to the <code>_v</code> pattern (Josuttis discusses in context of C++17 library evolution around p. 251).</li>
 </ul>` },
-  { name: `23. Parallel Stl Algorithms`, path: `22_parallel_stl_algorithms.md`, dir: ``, body: `<h1 id="chapter-22-parallel-stl-algorithms">Chapter 22: Parallel STL Algorithms</h1>
+  { name: `23. Parallel Stl Algorithms`, path: `22_parallel_stl_algorithms.md`, dir: ``, words: 2259, mins: 11, body: `<h1 id="chapter-22-parallel-stl-algorithms">Chapter 22: Parallel STL Algorithms</h1>
 <p><em>Reference: Nicolai M. Josuttis, </em><em>C++17 - The Complete Guide</em><em>, Chapter 22, pp. 259-277.</em></p>
 <p>Parallel algorithms allow standard library algorithms to exploit multiple threads (and, for <code>par_unseq</code>, vectorization hints) while sharing a uniform interface through <strong>execution policies</strong> in <code>&lt;execution&gt;</code>.</p>
 <hr />
@@ -8186,7 +8635,7 @@ int main() {
 <li><strong>Chapter 23:</strong> <code>reduce</code>, scans, and <code>for_each_n</code> in detail (pp. 279-291).</li>
 <li><strong>Chapter 22 (this file):</strong> policies, pitfalls, algorithm overview (pp. 259-277).</li>
 </ul>` },
-  { name: `24. New Stl Algorithms`, path: `23_new_stl_algorithms.md`, dir: ``, body: `<h1 id="chapter-23-new-stl-algorithms-in-detail">Chapter 23: New STL Algorithms in Detail</h1>
+  { name: `24. New Stl Algorithms`, path: `23_new_stl_algorithms.md`, dir: ``, words: 1102, mins: 6, body: `<h1 id="chapter-23-new-stl-algorithms-in-detail">Chapter 23: New STL Algorithms in Detail</h1>
 <p><em>Reference: Nicolai M. Josuttis, </em><em>C++17 - The Complete Guide</em><em>, Chapter 23, pp. 279-291.</em></p>
 <p>This chapter focuses on algorithms <strong>new or redesigned</strong> in C++17: <code>for_each_n</code>, numeric reductions and scans (<code>reduce</code>, <code>transform_reduce</code>, inclusive/exclusive scans and transform variants), including interactions with parallel execution policies from Chapter 22.</p>
 <hr />
@@ -8423,7 +8872,7 @@ std::vector&lt;double&gt; cumulative_weights(const std::vector&lt;int&gt;&amp; c
 <li><strong>Chapter 22:</strong> execution policies, parallel pitfalls (pp. 259-277).</li>
 <li>Josuttis discusses numeric algorithm motivation adjacent to <strong>Section 23.2 (pp. 281-291)</strong>.</li>
 </ul>` },
-  { name: `25. Substring Searchers`, path: `24_substring_searchers.md`, dir: ``, body: `<h1 id="chapter-24-substring-and-subsequence-searchers">Chapter 24: Substring and Subsequence Searchers</h1>
+  { name: `25. Substring Searchers`, path: `24_substring_searchers.md`, dir: ``, words: 791, mins: 4, body: `<h1 id="chapter-24-substring-and-subsequence-searchers">Chapter 24: Substring and Subsequence Searchers</h1>
 <p><em>Reference: Nicolai M. Josuttis, </em><em>C++17 - The Complete Guide</em><em>, Chapter 24, pp. 293-298.</em></p>
 <p>Searchers encapsulate preprocessing of the <strong>pattern</strong> so repeated searches in a <strong>text</strong> reuse auxiliary tables (Boyer-Moore / Horspool). They integrate with <code>std::search</code> via overloads that take a <strong>searcher object</strong>.</p>
 <hr />
@@ -8637,7 +9086,7 @@ bool contains_ci(std::string_view text, std::string_view pat) {
 <li><code>std::search</code> general interface: <code>&lt;algorithm&gt;</code>.</li>
 <li>Parallel algorithms (Chapter 22) are orthogonal; substring searchers are sequential iterator-based utilities.</li>
 </ul>` },
-  { name: `26. Other Utility Functions`, path: `25_other_utility_functions.md`, dir: ``, body: `<h1 id="chapter-25-other-utility-functions-and-algorithms">Chapter 25: Other Utility Functions and Algorithms</h1>
+  { name: `26. Other Utility Functions`, path: `25_other_utility_functions.md`, dir: ``, words: 787, mins: 4, body: `<h1 id="chapter-25-other-utility-functions-and-algorithms">Chapter 25: Other Utility Functions and Algorithms</h1>
 <p><em>Reference: Nicolai M. Josuttis, </em><em>C++17 - Part IV - The Complete Guide</em><em>, Chapter 25, pp. 299-307.</em></p>
 <p>This chapter covers small but broadly useful C++17 additions: <strong><code>size</code></strong>, <strong><code>empty</code></strong>, <strong><code>data</code></strong> free functions; <strong><code>as_const</code></strong>; <strong><code>clamp</code></strong>; and <strong><code>sample</code></strong>.</p>
 <hr />
@@ -8852,7 +9301,7 @@ std::sample(first, last, out, n, rng);
 <li>Random engines: <code>&lt;random&gt;</code> (Josuttis covers alongside algorithmic additions around pp. 299-307).</li>
 <li><strong>Chapter 28:</strong> other small utilities (e.g. chrono rounding) complement these patterns.</li>
 </ul>` },
-  { name: `27. Container String Extensions`, path: `26_container_string_extensions.md`, dir: ``, body: `<h1 id="chapter-26-container-and-string-extensions">Chapter 26: Container and String Extensions</h1>
+  { name: `27. Container String Extensions`, path: `26_container_string_extensions.md`, dir: ``, words: 878, mins: 4, body: `<h1 id="chapter-26-container-and-string-extensions">Chapter 26: Container and String Extensions</h1>
 <p><em>Reference: Nicolai M. Josuttis, </em><em>C++17 - The Complete Guide</em><em>, Chapter 26, pp. 309-319.</em></p>
 <p>C++17 extends associative containers with <strong>node handles</strong> (<code>extract</code> / splice-style insertion), refines <strong>emplace</strong> return types, adds <code>try_emplace</code> / <code>insert_or_assign</code>, permits certain containers with <strong>incomplete</strong> value types, and makes <code>std::string::data()</code> provide <strong>mutable</strong> access.</p>
 <hr />
@@ -9062,7 +9511,7 @@ void mutate_first(std::string&amp; s) {
 <li>Node handles also matter for exception safety when reinserting (ensure you handle failed insert paths).</li>
 <li><strong>Chapter 25:</strong> <code>std::data</code> free function vs <code>string::data</code> (pp. 299-307).</li>
 </ul>` },
-  { name: `28. Multithreading Concurrency`, path: `27_multithreading_concurrency.md`, dir: ``, body: `<h1 id="chapter-27-multi-threading-and-concurrency">Chapter 27: Multi-Threading and Concurrency</h1>
+  { name: `28. Multithreading Concurrency`, path: `27_multithreading_concurrency.md`, dir: ``, words: 847, mins: 4, body: `<h1 id="chapter-27-multi-threading-and-concurrency">Chapter 27: Multi-Threading and Concurrency</h1>
 <p><em>Reference: Nicolai M. Josuttis, </em><em>C++17 - The Complete Guide</em><em>, Chapter 27, pp. 321-326.</em></p>
 <p>This chapter summarizes supplementary synchronization utilities: <strong><code>std::scoped_lock</code></strong> for multi-mutex locking, <strong><code>std::shared_mutex</code></strong>, compile-time lock-free queries via <strong><code>std::atomic::is_always_lock_free</code></strong>, and <strong>cache-line hint constants</strong> for avoiding false sharing.</p>
 <hr />
@@ -9275,7 +9724,7 @@ public:
 <li><strong>Chapter 22:</strong> parallel algorithms require thread-safe element operations.</li>
 <li>Memory order on atomics: still <code>&lt;atomic&gt;</code> / <code>std::memory_order</code> (consult memory model chapters in Josuttis beyond p. 326 as your edition organizes them).</li>
 </ul>` },
-  { name: `29. Other Small Library Features`, path: `28_other_small_library_features.md`, dir: ``, body: `<h1 id="chapter-28-other-small-library-features-and-modifications">Chapter 28: Other Small Library Features and Modifications</h1>
+  { name: `29. Other Small Library Features`, path: `28_other_small_library_features.md`, dir: ``, words: 1327, mins: 7, body: `<h1 id="chapter-28-other-small-library-features-and-modifications">Chapter 28: Other Small Library Features and Modifications</h1>
 <p><em>Reference: Nicolai M. Josuttis, </em><em>C++17 - The Complete Guide</em><em>, Chapter 28, pp. 327-336.</em></p>
 <p>This chapter collects <strong>miscellaneous</strong> library tweaks: <code>uncaught_exceptions</code>, <code>shared_ptr</code> extensions for arrays and casts, <code>weak</code> helpers, numeric/chrono additions, and broader <code>constexpr</code> / <code>noexcept</code> marking across the standard library.</p>
 <hr />
@@ -9560,7 +10009,7 @@ int main() {
 <li><strong>Chapter 25:</strong> <code>clamp</code>, <code>sample</code>, <code>data</code> utilities (pp. 299-307).</li>
 <li><strong>Chapter 26:</strong> container handle and string <code>data</code> (pp. 309-319).</li>
 </ul>` },
-  { name: `30. Polymorphic Memory Resources`, path: `29_polymorphic_memory_resources.md`, dir: ``, body: `<h1 id="chapter-29-polymorphic-memory-resources-pmr">Chapter 29: Polymorphic Memory Resources (PMR)</h1>
+  { name: `30. Polymorphic Memory Resources`, path: `29_polymorphic_memory_resources.md`, dir: ``, words: 1370, mins: 7, body: `<h1 id="chapter-29-polymorphic-memory-resources-pmr">Chapter 29: Polymorphic Memory Resources (PMR)</h1>
 <p>Tutorial aligned with <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis (Addison-Wesley). <strong>Page references</strong> use <strong>p.</strong> for this chapter’s span <strong>pp. 341-364</strong>.</p>
 <p>C++17 introduces <strong>polymorphic memory resources</strong> in <code>&lt;memory_resource&gt;</code> (and allocator-aware containers in corresponding headers, e.g. <code>&lt;vector&gt;</code> via <code>std::pmr::vector</code>). The core idea: <strong>separate allocation strategy from container type</strong> by passing a <code>std::pmr::memory_resource*</code> (or using the <strong>default resource</strong>) instead of encoding the allocator type in the container’s template parameters.</p>
 <hr />
@@ -9813,7 +10262,7 @@ private:
 <hr />
 <h2 id="further-reading-same-chapter">Further reading (same chapter)</h2>
 <p>Josuttis: <strong>Chapter 29</strong>, pp. <strong>341-364</strong> – worked examples, edge cases (alignment, upstream lifetimes, custom resources), and integration guidance for real codebases.</p>` },
-  { name: `31. New Delete Overaligned`, path: `30_new_delete_overaligned.md`, dir: ``, body: `<h1 id="chapter-30-new-and-delete-with-over-aligned-data">Chapter 30: <code>new</code> and <code>delete</code> with Over-Aligned Data</h1>
+  { name: `31. New Delete Overaligned`, path: `30_new_delete_overaligned.md`, dir: ``, words: 998, mins: 5, body: `<h1 id="chapter-30-new-and-delete-with-over-aligned-data">Chapter 30: <code>new</code> and <code>delete</code> with Over-Aligned Data</h1>
 <p>Tutorial aligned with <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis. <strong>Page references</strong>: <strong>pp. 365-383</strong>.</p>
 <p>This chapter covers <strong>over-aligned types</strong>: objects whose alignment exceeds the <strong>default alignment</strong> for dynamic allocation on your platform. C++17 fixed a longstanding portability gap: <strong>global <code>new</code></strong> may now allocate from a distinct <strong>over-aligned</strong> path so that <strong><code>alignas(N)</code></strong> types get storage that actually respects <strong>N</strong> (p. 365-366).</p>
 <hr />
@@ -10002,7 +10451,7 @@ Over-aligned block for T2 (alignof=64)
 <hr />
 <h2 id="reference">Reference</h2>
 <p>Josuttis: <strong>Chapter 30</strong>, <strong>pp. 365-383</strong>.</p>` },
-  { name: `32. To Chars From Chars`, path: `31_to_chars_from_chars.md`, dir: ``, body: `<h1 id="chapter-31-stdto_chars-and-stdfrom_chars">Chapter 31: <code>std::to_chars()</code> and <code>std::from_chars()</code></h1>
+  { name: `32. To Chars From Chars`, path: `31_to_chars_from_chars.md`, dir: ``, words: 716, mins: 4, body: `<h1 id="chapter-31-stdto_chars-and-stdfrom_chars">Chapter 31: <code>std::to_chars()</code> and <code>std::from_chars()</code></h1>
 <p>Tutorial aligned with <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis. <strong>Page references</strong>: <strong>pp. 385-391</strong>.</p>
 <p>Header: <strong><code>&lt;charconv&gt;</code></strong>. These functions provide <strong>low-level</strong>, <strong>locale-independent</strong> numeric parsing and formatting with <strong>no allocations</strong>. They are intended for <strong>serialization</strong>, <strong>protocol</strong> coding, <strong>logging</strong>, and hot paths where <strong><code>sprintf</code></strong>, <strong><code>iostreams</code></strong>, or <strong><code>std::to_string</code></strong> are too heavy (p. 385).</p>
 <hr />
@@ -10176,7 +10625,7 @@ Legend:
 <hr />
 <h2 id="reference">Reference</h2>
 <p>Josuttis: <strong>Chapter 31</strong>, <strong>pp. 385-391</strong>.</p>` },
-  { name: `33. Std Launder`, path: `32_std_launder.md`, dir: ``, body: `<h1 id="chapter-32-stdlaunder">Chapter 32: <code>std::launder()</code></h1>
+  { name: `33. Std Launder`, path: `32_std_launder.md`, dir: ``, words: 707, mins: 4, body: `<h1 id="chapter-32-stdlaunder">Chapter 32: <code>std::launder()</code></h1>
 <p>Tutorial aligned with <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis. <strong>Page references</strong>: <strong>pp. 393-398</strong>.</p>
 <p>Header: <strong><code>&lt;new&gt;</code></strong>. <code>std::launder</code> is a <strong>low-level</strong> tool that interacts with the C++ <strong>object model</strong> and <strong>compiler optimizations</strong>. It is primarily needed when <strong>replacing an object</strong> at a <strong>fixed address</strong> (often via <strong>placement new</strong>) where <strong><code>const</code></strong> or <strong>reference</strong> members cause the compiler to assume <strong>immutable facts</strong> about the old object&rsquo;s memory that <strong>no longer hold</strong> after <strong>lifetime</strong> changes (p. 393-396).</p>
 <hr />
@@ -10295,7 +10744,7 @@ void with_launder() {
 <hr />
 <h2 id="reference">Reference</h2>
 <p>Josuttis: <strong>Chapter 32</strong>, <strong>pp. 393-398</strong>.</p>` },
-  { name: `34. Generic Code Improvements`, path: `33_generic_code_improvements.md`, dir: ``, body: `<h1 id="chapter-33-improvements-for-implementing-generic-code">Chapter 33: Improvements for Implementing Generic Code</h1>
+  { name: `34. Generic Code Improvements`, path: `33_generic_code_improvements.md`, dir: ``, words: 486, mins: 2, body: `<h1 id="chapter-33-improvements-for-implementing-generic-code">Chapter 33: Improvements for Implementing Generic Code</h1>
 <p>Tutorial aligned with <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis. <strong>Page references</strong>: <strong>pp. 399-404</strong>.</p>
 <p>Three small <strong>standard library</strong> tools simplify <strong>generic programming</strong>:</p>
 <ol>
@@ -10433,7 +10882,7 @@ static_assert(has_begin&lt;std::vector&lt;int&gt;&gt;::value);
 <hr />
 <h2 id="reference">Reference</h2>
 <p>Josuttis: <strong>Chapter 33</strong>, <strong>pp. 399-404</strong>.</p>` },
-  { name: `35. Common Cpp17 Settings`, path: `34_common_cpp17_settings.md`, dir: ``, body: `<h1 id="chapter-34-common-c17-settings">Chapter 34: Common C++17 Settings</h1>
+  { name: `35. Common Cpp17 Settings`, path: `34_common_cpp17_settings.md`, dir: ``, words: 504, mins: 3, body: `<h1 id="chapter-34-common-c17-settings">Chapter 34: Common C++17 Settings</h1>
 <p>Tutorial aligned with <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis. <strong>Page references</strong>: <strong>pp. 407-408</strong>.</p>
 <p>This short chapter collects <strong>macro values</strong>, <strong>C compatibility</strong>, <strong>signal handler</strong> constraints, and <strong>forward progress</strong> wording that affect <strong>portable</strong> C++17 code (p. 407-408).</p>
 <hr />
@@ -10540,7 +10989,7 @@ extern &quot;C&quot; void handler(int signum) {
 <hr />
 <h2 id="reference">Reference</h2>
 <p>Josuttis: <strong>Chapter 34</strong>, <strong>pp. 407-408</strong>.</p>` },
-  { name: `36. Deprecated Removed Features`, path: `35_deprecated_removed_features.md`, dir: ``, body: `<h1 id="chapter-35-deprecated-and-removed-features">Chapter 35: Deprecated and Removed Features</h1>
+  { name: `36. Deprecated Removed Features`, path: `35_deprecated_removed_features.md`, dir: ``, words: 944, mins: 5, body: `<h1 id="chapter-35-deprecated-and-removed-features">Chapter 35: Deprecated and Removed Features</h1>
 <p>Tutorial aligned with <em>C++17 - The Complete Guide</em> by Nicolai M. Josuttis. <strong>Page references</strong>: <strong>pp. 409-412</strong>.</p>
 <p>C++17 <strong>removes</strong> some legacy features and <strong>deprecates</strong> others to steer code toward safer, clearer modern idioms (p. 409-412).</p>
 <hr />
@@ -10826,6 +11275,20 @@ function prettify(component) {
     return c.replace(/\b\w/g, l => l.toUpperCase());
 }
 
+// Like prettify(), but keeps any leading "01_"/"2-" style number as a "01. "
+// prefix so the sidebar mirrors the on-disk ordering of the documents.
+function prettifyKeepNum(component) {
+    const m = component.match(/^([0-9]+)[_-]/);
+    const prefix = m ? m[1] + '. ' : '';
+    return prefix + prettify(component);
+}
+
+const HTML_ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
+function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => HTML_ESCAPES[c]); }
+function cleanName(name) { return (name || '').replace(/^\s*\d+\.\s*/, ''); }
+
+const CLOCK_ICON = '<svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8.75-4.25v3.94l2.4 2.4a.75.75 0 0 1-1.06 1.06l-2.62-2.62a.75.75 0 0 1-.22-.53V3.75a.75.75 0 0 1 1.5 0Z"></path></svg>';
+
 TAB_DATA.forEach((tab, idx) => {
     const opt = document.createElement('option');
     opt.value = String(idx);
@@ -10837,6 +11300,22 @@ TAB_DATA.forEach((tab, idx) => {
     panel.id = 'panel-' + idx;
     panel.dataset.dir = tab.dir || '';
     panel.innerHTML = tab.body;
+
+    // Breadcrumb + reading-time meta line (prepended, built once).
+    const meta = document.createElement('div');
+    meta.className = 'doc-meta';
+    const crumbs = cleanName(tab.name).split(' / ');
+    const crumbHtml = crumbs.map((c, i) =>
+        '<span class="crumb">' + escapeHtml(c) + '</span>' +
+        (i < crumbs.length - 1 ? '<span class="crumb-sep">/</span>' : '')
+    ).join('');
+    const words = (tab.words || 0).toLocaleString();
+    meta.innerHTML =
+        '<span class="doc-breadcrumb">' + crumbHtml + '</span>' +
+        '<span class="doc-reading-time">' + CLOCK_ICON +
+        (tab.mins || 1) + ' min read \u00b7 ' + words + ' words</span>';
+    panel.insertBefore(meta, panel.firstChild);
+
     tabPanels.appendChild(panel);
 });
 
@@ -10881,7 +11360,7 @@ function createTreeHtml(node, parentPath = '') {
         
         const label = document.createElement('span');
         label.className = 'dir-name';
-        label.textContent = prettify(dirName);
+        label.textContent = prettifyKeepNum(dirName);
         
         header.appendChild(chevron);
         header.appendChild(folder);
@@ -10906,10 +11385,10 @@ function createTreeHtml(node, parentPath = '') {
         const a = document.createElement('a');
         a.href = '#tab-' + idx;
         
-        // Use the basename or prettified name without numbers
+        // Use the basename, keeping any leading "NN_" document number prefix.
         const baseName = tab.path.split('/').pop() || tab.name;
         let displayName = baseName.replace(/\.[a-zA-Z0-9]+$/, '');
-        displayName = prettify(displayName);
+        displayName = prettifyKeepNum(displayName);
         
         a.textContent = displayName;
         a.title = tab.name;
@@ -11024,6 +11503,23 @@ docSelect.addEventListener('change', () => {
     activateTab(parseInt(docSelect.value, 10));
 });
 
+/* Previous / next document buttons in the navbar. */
+const docPrevBtn = document.getElementById('docPrev');
+const docNextBtn = document.getElementById('docNext');
+if (docPrevBtn) docPrevBtn.addEventListener('click', () => {
+    const i = currentTabIdx();
+    if (i > 0) { pushHistory(); activateTab(i - 1); }
+});
+if (docNextBtn) docNextBtn.addEventListener('click', () => {
+    const i = currentTabIdx();
+    if (i < TAB_DATA.length - 1) { pushHistory(); activateTab(i + 1); }
+});
+
+function updateDocNav(idx) {
+    if (docPrevBtn) docPrevBtn.disabled = (idx <= 0);
+    if (docNextBtn) docNextBtn.disabled = (idx >= TAB_DATA.length - 1);
+}
+
 /* ───── Syntax highlighting ───── */
 
 function addCopyButton(pre, block) {
@@ -11104,34 +11600,56 @@ function getStoredTheme() {
     try { return localStorage.getItem('doc-theme'); } catch(e) { return null; }
 }
 
-function setTheme(theme) {
+const darkMql = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+function osTheme() { return (darkMql && darkMql.matches) ? 'dark' : 'light'; }
+
+// Apply a theme. `persist` is true ONLY for an explicit user action; auto/OS
+// applications must NOT write to storage, otherwise the very first auto theme
+// would look like an explicit choice and we'd stop following the OS.
+function setTheme(theme, persist) {
     document.body.setAttribute('data-theme', theme);
     hljsLink.href = theme === 'light' ? HLJS_LIGHT : HLJS_DARK;
-    themeToggleBtn.innerHTML = theme === 'light' ? ICON_SUN : ICON_MOON;
+    themeToggleBtn.innerHTML = (theme === 'light' ? ICON_SUN : ICON_MOON);
     themeToggleBtn.title = theme === 'light'
         ? 'Switch to dark mode (Ctrl+Shift+L)'
         : 'Switch to light mode (Ctrl+Shift+L)';
-    try { localStorage.setItem('doc-theme', theme); } catch(e) {}
+    if (persist) {
+        try { localStorage.setItem('doc-theme', theme); } catch(e) {}
+    }
+}
+
+function toggleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    setTheme(current === 'dark' ? 'light' : 'dark', true);
 }
 
 (function initTheme() {
     const stored = getStoredTheme();
-    const theme = (stored === 'light' || stored === 'dark')
-        ? stored
-        : (document.body.getAttribute('data-theme') || 'dark');
-    setTheme(theme);
+    if (stored === 'light' || stored === 'dark') {
+        setTheme(stored, false);              // explicit user choice wins
+    } else {
+        setTheme(osTheme(), false);           // otherwise follow the OS (live)
+    }
 })();
 
-themeToggleBtn.addEventListener('click', () => {
-    const current = document.body.getAttribute('data-theme') || 'dark';
-    setTheme(current === 'dark' ? 'light' : 'dark');
-});
+// Live-follow the OS appearance while the reader hasn't picked a theme manually.
+if (darkMql) {
+    const onOsChange = (e) => {
+        const stored = getStoredTheme();
+        if (stored !== 'light' && stored !== 'dark') {
+            setTheme(e.matches ? 'dark' : 'light', false);
+        }
+    };
+    if (darkMql.addEventListener) darkMql.addEventListener('change', onOsChange);
+    else if (darkMql.addListener) darkMql.addListener(onOsChange);  // older Safari
+}
+
+themeToggleBtn.addEventListener('click', toggleTheme);
 
 document.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'L') {
         e.preventDefault();
-        const current = document.body.getAttribute('data-theme') || 'dark';
-        setTheme(current === 'dark' ? 'light' : 'dark');
+        toggleTheme();
     }
 });
 
@@ -11164,10 +11682,12 @@ function activateTab(idx, resetScroll) {
     }
     history.replaceState(null, null, '#tab-' + idx);
     if (typeof buildToc === 'function') buildToc(idx);
-    // Reflect the active document's title in the condensing navbar.
+    // Reflect the active document's title in the condensing navbar. Use the
+    // full name (including any leading number) so it matches the picker exactly.
     if (navDocTitle && TAB_DATA[idx]) {
-        navDocTitle.textContent = TAB_DATA[idx].name.replace(/^\s*\d+\.\s*/, '');
+        navDocTitle.textContent = TAB_DATA[idx].name;
     }
+    if (typeof updateDocNav === 'function') updateDocNav(idx);
     // Jump back to the top when switching documents so the reader starts at
     // the beginning rather than wherever the previous doc was scrolled to.
     if (resetScroll) {
@@ -11175,7 +11695,26 @@ function activateTab(idx, resetScroll) {
         document.body.classList.remove('nav-condensed');
         navLastY = 0;
     }
+    LS.set('doc-last-idx', String(idx));
 }
+
+/* ───── Lightweight state persistence (no per-scroll writes) ─────
+   Remembers the last document, sidebar/TOC open state and scroll position so
+   reopening the file resumes where you left off. Writes happen only on tab
+   switch, panel toggle and page hide -- never during scrolling. */
+const LS = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+};
+
+function persistScroll() {
+    LS.set('doc-last-idx', String(currentTabIdx()));
+    LS.set('doc-last-y', String(Math.round(window.scrollY)));
+}
+window.addEventListener('pagehide', persistScroll);
+document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') persistScroll();
+});
 
 /* ───── Search index: pre-extract plain text per block ───── */
 
@@ -11373,6 +11912,7 @@ function runSearch() {
 
 function navigateToResult(result) {
     const savedQuery = searchInput.value.trim() || result.text.substring(0, 20);
+    pushHistory();
     closeSearch();
     activateTab(result.tabIdx, false);
 
@@ -11425,6 +11965,8 @@ function clearHighlights() {
 const sidebarNav = document.getElementById('sidebarNav');
 const navList = document.getElementById('navList');
 const sidebarToggle = document.getElementById('sidebarToggle');
+const readProgress = document.getElementById('readProgress');
+const toTopBtn = document.getElementById('toTop');
 let currentTocHeadings = [];
 
 function buildToc(panelIdx) {
@@ -11435,13 +11977,51 @@ function buildToc(panelIdx) {
     const headings = panel.querySelectorAll('h1, h2, h3, h4');
     headings.forEach((h, i) => {
         if (!h.id) h.id = 'autoid-' + panelIdx + '-' + i;
+        // Capture the clean heading text once (before any permalink anchor is
+        // added) so the TOC label never picks up the trailing '#'.
+        let title = h.getAttribute('data-title');
+        if (title === null) {
+            title = h.textContent;
+            h.setAttribute('data-title', title);
+            // Add a hover-revealed permalink anchor (built lazily, only for the
+            // doc currently being viewed).
+            const perma = document.createElement('a');
+            perma.className = 'heading-anchor';
+            perma.href = '#' + h.id;
+            perma.textContent = '#';
+            perma.setAttribute('aria-label', 'Copy link to this section');
+            perma.title = 'Copy link to this section';
+            const headingId = h.id;
+            perma.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Keep the doc-content click handler from also firing (it would
+                // re-run scroll/history logic and resolve duplicate ids).
+                e.stopPropagation();
+                const url = location.href.split('#')[0] + '#' + headingId;
+                const flash = function() {
+                    perma.classList.remove('copied');
+                    // Force reflow so the animation restarts on rapid clicks.
+                    void perma.offsetWidth;
+                    perma.classList.add('copied');
+                    setTimeout(function() { perma.classList.remove('copied'); }, 1400);
+                };
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(url).then(flash).catch(function() { fallbackCopy(url, flash); });
+                } else {
+                    fallbackCopy(url, flash);
+                }
+                history.replaceState(null, '', '#' + headingId);
+                scrollToTarget(h);
+            });
+            h.appendChild(perma);
+        }
         const level = h.tagName.substring(1);
         const li = document.createElement('li');
         const a = document.createElement('a');
         a.href = '#' + h.id;
-        a.textContent = h.textContent;
+        a.textContent = title;
         a.className = 'nav-h' + level;
-        a.title = h.textContent;
+        a.title = title;
         a.dataset.headingId = h.id;
         a.addEventListener('click', function(e) {
             e.preventDefault();
@@ -11454,13 +12034,23 @@ function buildToc(panelIdx) {
     updateScrollSpy();
 }
 
+/* Single rAF-throttled scroll handler drives scroll-spy, the reading-progress
+   bar and the back-to-top button -- one listener doing all the work keeps
+   scrolling smooth (no extra runtime over the original two listeners). */
 let spyRaf = null;
 function updateScrollSpy() {
     if (spyRaf) return;
     spyRaf = requestAnimationFrame(() => {
         spyRaf = null;
-        if (currentTocHeadings.length === 0) return;
         const scrollY = window.scrollY;
+
+        // Reading progress + back-to-top (run regardless of TOC contents).
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = max > 0 ? Math.min(100, (scrollY / max) * 100) : 0;
+        if (readProgress) readProgress.style.width = pct + '%';
+        if (toTopBtn) toTopBtn.classList.toggle('show', scrollY > 480);
+
+        if (currentTocHeadings.length === 0) return;
         const offset = 80;
         let activeEntry = currentTocHeadings[0];
         for (const entry of currentTocHeadings) {
@@ -11472,18 +12062,14 @@ function updateScrollSpy() {
         }
         currentTocHeadings.forEach(e => e.link.classList.remove('nav-active'));
         if (activeEntry) {
+            // Only update the highlight. Do NOT programmatically scroll either
+            // sidebar -- they should stay put and move only when the user
+            // scrolls them. (The previous code scrolled the wrong sidebar, the
+            // left document list, which made it jump to the top on every click.)
             activeEntry.link.classList.add('nav-active');
-            const linkTop = activeEntry.link.offsetTop;
-            const navH = sidebarNav.clientHeight;
-            const navScroll = sidebarNav.scrollTop;
-            if (linkTop < navScroll + 40 || linkTop > navScroll + navH - 40) {
-                sidebarNav.scrollTo({ top: linkTop - navH / 3, behavior: 'smooth' });
-            }
         }
     });
 }
-
-window.addEventListener('scroll', updateScrollSpy, { passive: true });
 
 /* ───── iOS-style condensing navbar (hide on scroll down, show on scroll up) ───── */
 function updateNavCondense() {
@@ -11500,7 +12086,18 @@ function updateNavCondense() {
     }
     navLastY = y;
 }
-window.addEventListener('scroll', updateNavCondense, { passive: true });
+
+/* One scroll listener for everything (was two). */
+window.addEventListener('scroll', function () {
+    updateNavCondense();
+    updateScrollSpy();
+}, { passive: true });
+
+if (toTopBtn) {
+    toTopBtn.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
 
 const tocSidebar = document.getElementById('tocSidebar');
 const tocToggle = document.getElementById('tocToggle');
@@ -11512,6 +12109,7 @@ function toggleSidebar() {
         tocSidebar.classList.add('collapsed');
         document.body.classList.add('toc-collapsed');
     }
+    LS.set('doc-sidebar', collapsed ? 'closed' : 'open');
 }
 
 function toggleToc() {
@@ -11521,6 +12119,7 @@ function toggleToc() {
         sidebarNav.classList.add('collapsed');
         document.body.classList.add('sidebar-collapsed');
     }
+    LS.set('doc-toc', collapsed ? 'closed' : 'open');
 }
 
 sidebarToggle.addEventListener('click', toggleSidebar);
@@ -11574,9 +12173,54 @@ function gotoAnchor(idx, anchor) {
     }
 }
 
+/* ───── Navigation history (browser-style back button) ─────
+   Whenever a link takes the reader to another section/document, remember where
+   they were (which tab + scroll position) so the navbar back button can return
+   them to exactly that spot. */
+const navBackBtn = document.getElementById('navBack');
+let navHistory = [];
+
+function currentTabIdx() {
+    const v = parseInt(docSelect.value, 10);
+    return isNaN(v) ? 0 : v;
+}
+
+function updateBackBtn() {
+    if (navBackBtn) navBackBtn.disabled = navHistory.length === 0;
+}
+
+function pushHistory() {
+    navHistory.push({ idx: currentTabIdx(), y: window.scrollY });
+    if (navHistory.length > 200) navHistory.shift();
+    updateBackBtn();
+}
+
+function navBack() {
+    const state = navHistory.pop();
+    if (!state) return;
+    activateTab(state.idx, false);
+    // Restore the exact scroll position after the panel becomes visible.
+    requestAnimationFrame(() => window.scrollTo({ top: state.y, behavior: 'auto' }));
+    updateBackBtn();
+}
+
+if (navBackBtn) navBackBtn.addEventListener('click', navBack);
+document.addEventListener('keydown', (e) => {
+    if (e.altKey && e.key === 'ArrowLeft' && !overlay.classList.contains('open')) {
+        e.preventDefault();
+        navBack();
+    }
+});
+
 document.addEventListener('click', function(e) {
     const link = e.target.closest('a[href]');
     if (!link) return;
+    // Only handle links that live inside document content. Links in the
+    // sidebars (TOC "on this page", document list) have their own handlers;
+    // letting this run for them would resolve duplicate heading ids against
+    // the wrong panel (every same-template doc shares the same ids).
+    const ownerPanel = link.closest('.tab-content');
+    if (!ownerPanel) return;
     const href = link.getAttribute('href');
     if (!href) return;
 
@@ -11584,10 +12228,10 @@ document.addEventListener('click', function(e) {
     if (href.charAt(0) === '#') {
         const id = href.substring(1);
         if (!id) return;
-        const ownerPanel = link.closest('.tab-content');
         const target = findById(id, ownerPanel);
         if (target) {
             e.preventDefault();
+            pushHistory();
             const dest = target.closest('.tab-content');
             if (dest) {
                 const m = dest.id.match(/^panel-(\d+)$/);
@@ -11602,12 +12246,26 @@ document.addEventListener('click', function(e) {
     const md = mdTarget(href, baseDirOf(link));
     if (md) {
         e.preventDefault();
+        pushHistory();
         gotoAnchor(md.idx, md.anchor);
     }
 });
 
 /* ───── Startup ───── */
 /* - Nagesh N Nazare - */
+
+// Restore persisted sidebar / TOC open state (only on desktop, where the
+// drawers don't overlay the content).
+if (window.innerWidth > 1024) {
+    if (LS.get('doc-sidebar') === 'open') {
+        sidebarNav.classList.remove('collapsed');
+        document.body.classList.remove('sidebar-collapsed');
+    }
+    if (LS.get('doc-toc') === 'open') {
+        tocSidebar.classList.remove('collapsed');
+        document.body.classList.remove('toc-collapsed');
+    }
+}
 
 const hash = location.hash || '';
 const tabMatch = hash.match(/^#tab-(\d+)$/);
@@ -11631,7 +12289,17 @@ if (tabMatch) {
         activateTab(0);
     }
 } else {
-    activateTab(0);
+    // No explicit target: resume the last-read document + scroll position.
+    const lastIdx = parseInt(LS.get('doc-last-idx'), 10);
+    const lastY = parseInt(LS.get('doc-last-y'), 10);
+    if (!isNaN(lastIdx) && lastIdx >= 0 && lastIdx < TAB_DATA.length) {
+        activateTab(lastIdx, false);
+        if (!isNaN(lastY) && lastY > 0) {
+            requestAnimationFrame(() => window.scrollTo({ top: lastY, behavior: 'auto' }));
+        }
+    } else {
+        activateTab(0);
+    }
 }
 </script>
 
